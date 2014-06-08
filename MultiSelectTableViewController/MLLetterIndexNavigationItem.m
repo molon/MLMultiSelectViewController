@@ -33,6 +33,7 @@
 {
     self.exclusiveTouch = YES;
     self.multipleTouchEnabled = NO;
+    self.backgroundColor = [UIColor clearColor];
     
     self.textAlignment = NSTextAlignmentCenter;
     self.font = [UIFont boldSystemFontOfSize:11];

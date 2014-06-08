@@ -43,7 +43,7 @@
 - (void)setUp
 {
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    
+    self.backgroundColor = [UIColor clearColor];
 }
 
 - (UIView *)searchIconView
@@ -53,10 +53,12 @@
         imageView.image = [UIImage imageNamed:@"SearchIcon"];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.clipsToBounds = YES;
+        imageView.backgroundColor = [UIColor clearColor];
         imageView.tag = kImageViewTag;
         
         
         _searchIconView = [[UIView alloc]init];
+        _searchIconView.backgroundColor = [UIColor clearColor];
         [_searchIconView addSubview:imageView];
     }
     return _searchIconView;
