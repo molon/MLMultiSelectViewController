@@ -58,7 +58,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"选择联盟商家";
+    self.title = @"选择联系人";
     self.view.backgroundColor = [UIColor colorWithWhite:1.000 alpha:1.000];
     self.tableView.backgroundColor = [UIColor colorWithWhite:1.000 alpha:1.000];
     
