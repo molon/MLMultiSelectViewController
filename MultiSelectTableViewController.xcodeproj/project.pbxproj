@@ -22,6 +22,12 @@
 		36C4180119435ED400B53B59 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 36C417FF19435ED400B53B59 /* InfoPlist.strings */; };
 		36C4180319435ED400B53B59 /* MultiSelectTableViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C4180219435ED400B53B59 /* MultiSelectTableViewControllerTests.m */; };
 		36C4180E19435EFE00B53B59 /* MultiSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C4180D19435EFE00B53B59 /* MultiSelectViewController.m */; };
+		36C4181119436CD500B53B59 /* MultiSelectItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C4181019436CD500B53B59 /* MultiSelectItem.m */; };
+		36C4181319436DAB00B53B59 /* avatar.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 36C4181219436DAB00B53B59 /* avatar.jpg */; };
+		36C4181719436F9B00B53B59 /* MultiSelectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C4181519436F9B00B53B59 /* MultiSelectTableViewCell.m */; };
+		36C4181819436F9B00B53B59 /* MultiSelectTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36C4181619436F9B00B53B59 /* MultiSelectTableViewCell.xib */; };
+		36C4181D194371AC00B53B59 /* MLLetterIndexNavigationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C4181A194371AC00B53B59 /* MLLetterIndexNavigationItem.m */; };
+		36C4181E194371AC00B53B59 /* MLLetterIndexNavigationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C4181C194371AC00B53B59 /* MLLetterIndexNavigationView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +62,16 @@
 		36C4180219435ED400B53B59 /* MultiSelectTableViewControllerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MultiSelectTableViewControllerTests.m; sourceTree = "<group>"; };
 		36C4180C19435EFE00B53B59 /* MultiSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiSelectViewController.h; sourceTree = "<group>"; };
 		36C4180D19435EFE00B53B59 /* MultiSelectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiSelectViewController.m; sourceTree = "<group>"; };
+		36C4180F19436CD500B53B59 /* MultiSelectItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiSelectItem.h; sourceTree = "<group>"; };
+		36C4181019436CD500B53B59 /* MultiSelectItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiSelectItem.m; sourceTree = "<group>"; };
+		36C4181219436DAB00B53B59 /* avatar.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = avatar.jpg; sourceTree = "<group>"; };
+		36C4181419436F9B00B53B59 /* MultiSelectTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiSelectTableViewCell.h; sourceTree = "<group>"; };
+		36C4181519436F9B00B53B59 /* MultiSelectTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiSelectTableViewCell.m; sourceTree = "<group>"; };
+		36C4181619436F9B00B53B59 /* MultiSelectTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MultiSelectTableViewCell.xib; sourceTree = "<group>"; };
+		36C41819194371AC00B53B59 /* MLLetterIndexNavigationItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLLetterIndexNavigationItem.h; sourceTree = "<group>"; };
+		36C4181A194371AC00B53B59 /* MLLetterIndexNavigationItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLLetterIndexNavigationItem.m; sourceTree = "<group>"; };
+		36C4181B194371AC00B53B59 /* MLLetterIndexNavigationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLLetterIndexNavigationView.h; sourceTree = "<group>"; };
+		36C4181C194371AC00B53B59 /* MLLetterIndexNavigationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLLetterIndexNavigationView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +131,7 @@
 		36C417DD19435ED400B53B59 /* MultiSelectTableViewController */ = {
 			isa = PBXGroup;
 			children = (
+				36C4181219436DAB00B53B59 /* avatar.jpg */,
 				36C417E619435ED400B53B59 /* AppDelegate.h */,
 				36C417E719435ED400B53B59 /* AppDelegate.m */,
 				36C417E919435ED400B53B59 /* Main.storyboard */,
@@ -124,6 +141,15 @@
 				36C417DE19435ED400B53B59 /* Supporting Files */,
 				36C4180C19435EFE00B53B59 /* MultiSelectViewController.h */,
 				36C4180D19435EFE00B53B59 /* MultiSelectViewController.m */,
+				36C4180F19436CD500B53B59 /* MultiSelectItem.h */,
+				36C4181019436CD500B53B59 /* MultiSelectItem.m */,
+				36C4181419436F9B00B53B59 /* MultiSelectTableViewCell.h */,
+				36C4181519436F9B00B53B59 /* MultiSelectTableViewCell.m */,
+				36C4181619436F9B00B53B59 /* MultiSelectTableViewCell.xib */,
+				36C41819194371AC00B53B59 /* MLLetterIndexNavigationItem.h */,
+				36C4181A194371AC00B53B59 /* MLLetterIndexNavigationItem.m */,
+				36C4181B194371AC00B53B59 /* MLLetterIndexNavigationView.h */,
+				36C4181C194371AC00B53B59 /* MLLetterIndexNavigationView.m */,
 			);
 			path = MultiSelectTableViewController;
 			sourceTree = "<group>";
@@ -233,9 +259,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36C4181319436DAB00B53B59 /* avatar.jpg in Resources */,
 				36C417F019435ED400B53B59 /* Images.xcassets in Resources */,
 				36C417E219435ED400B53B59 /* InfoPlist.strings in Resources */,
 				36C417EB19435ED400B53B59 /* Main.storyboard in Resources */,
+				36C4181819436F9B00B53B59 /* MultiSelectTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,7 +282,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36C4181D194371AC00B53B59 /* MLLetterIndexNavigationItem.m in Sources */,
 				36C4180E19435EFE00B53B59 /* MultiSelectViewController.m in Sources */,
+				36C4181719436F9B00B53B59 /* MultiSelectTableViewCell.m in Sources */,
+				36C4181119436CD500B53B59 /* MultiSelectItem.m in Sources */,
+				36C4181E194371AC00B53B59 /* MLLetterIndexNavigationView.m in Sources */,
 				36C417EE19435ED400B53B59 /* ViewController.m in Sources */,
 				36C417E819435ED400B53B59 /* AppDelegate.m in Sources */,
 				36C417E419435ED400B53B59 /* main.m in Sources */,
