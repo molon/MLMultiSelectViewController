@@ -18,7 +18,10 @@
 
 @interface MLLetterIndexNavigationView : UIView
 
-@property(nonatomic,strong) NSArray *keys; //即为sections
-@property(nonatomic,weak) id<MLLetterIndexNavigationViewDelegate> delegate;
+@property (nonatomic, strong) NSArray *keys; //即为sections
+@property (nonatomic, weak) id<MLLetterIndexNavigationViewDelegate> delegate;
+
+//PS：需要搜索图标显示的话，delegate返回的index要注意下。搜索图标index为0。
+@property (nonatomic, assign) BOOL isNeedSearchIcon;
 
 @end

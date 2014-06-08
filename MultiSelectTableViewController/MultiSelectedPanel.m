@@ -47,6 +47,7 @@
     
     self.bkgImageView.image = [[UIImage imageNamed:@"MultiSelectedPanelBkg"]resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
     
+    self.tableView.scrollsToTop = NO;
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.transform = CGAffineTransformMakeRotation(M_PI*1.5);
     

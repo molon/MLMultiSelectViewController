@@ -8,12 +8,13 @@
 
 #import "MLLetterIndexNavigationView.h"
 #import "MLLetterIndexNavigationItem.h"
-//#import "MolonCore.h"
 
+#define kImageViewTag 888
 @interface MLLetterIndexNavigationView()
 
 @property(nonatomic,strong) UIView *contentView;
 @property(nonatomic,strong) NSMutableArray *items;
+@property (nonatomic, strong) UIView *searchIconView;
 
 @end
 
@@ -45,6 +46,22 @@
     
 }
 
+- (UIView *)searchIconView
+{
+    if (!_searchIconView) {
+		UIImageView *imageView = [[UIImageView alloc]init];
+        imageView.image = [UIImage imageNamed:@"SearchIcon"];
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        imageView.clipsToBounds = YES;
+        imageView.tag = kImageViewTag;
+        
+        
+        _searchIconView = [[UIView alloc]init];
+        [_searchIconView addSubview:imageView];
+    }
+    return _searchIconView;
+}
+
 - (UIView*)contentView
 {
     if (!_contentView) {
@@ -55,6 +72,18 @@
     return _contentView;
 }
 
+- (void)setIsNeedSearchIcon:(BOOL)isNeedSearchIcon
+{
+    _isNeedSearchIcon = isNeedSearchIcon;
+    if (isNeedSearchIcon&&!self.searchIconView.superview) {
+        [self.contentView addSubview:self.searchIconView];
+    }else if(!isNeedSearchIcon&&self.searchIconView.superview){
+        [self.searchIconView removeFromSuperview];
+    }
+    
+    [self setNeedsLayout];
+}
+
 - (void)setKeys:(NSArray *)keys
 {
     if ([keys isEqual:_keys]) {
@@ -63,7 +92,12 @@
     
     _keys = keys;
     
-    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];//删除所有的子View，重新加载
+    for (UIView *view in self.subviews) {
+        if ([view isKindOfClass:[MLLetterIndexNavigationItem class]]) {
+            [view removeFromSuperview];
+        }
+    }//删除所有的子View，重新加载
+    
     self.items = [NSMutableArray array];
     
     for (NSUInteger i=0; i<self.keys.count; i++) {
@@ -84,14 +118,26 @@
         return;
     }
     
+    NSUInteger count = self.keys.count;
+    if (self.isNeedSearchIcon) {
+        count++;
+    }
     //整理自身的数据
-#define kMaxItemHeight 15  //最高20高度，如果太多的话可能会重叠
-    CGFloat itemHeight = self.frame.size.height/self.keys.count;
+#define kMaxItemHeight 15  //最高15高度，如果太多的话可能会重叠
+    CGFloat itemHeight = self.frame.size.height/count;
     if (itemHeight>kMaxItemHeight) {
         itemHeight = kMaxItemHeight;
     }
     
     CGFloat lastY = 0;
+    if (self.isNeedSearchIcon) {
+#define kIconWidth 10.0f
+        self.searchIconView.frame = CGRectMake(0, lastY, self.frame.size.width, itemHeight);
+        //找到imageView
+        [self.searchIconView viewWithTag:kImageViewTag].frame = CGRectMake((self.searchIconView.frame.size.width-kIconWidth)/2, lastY, kIconWidth, kIconWidth);
+        
+        lastY+=itemHeight;
+    }
     for (MLLetterIndexNavigationItem *item in self.items) {
         item.frame = CGRectMake(0, lastY, self.frame.size.width, itemHeight);
         lastY+=itemHeight;
@@ -99,7 +145,6 @@
     //内容View放在中间
     self.contentView.frame = CGRectMake(0, (self.frame.size.height-lastY)/2, self.frame.size.width, lastY);
 }
-
 
 - (void)unHighlightAllItem
 {
@@ -113,13 +158,23 @@
 
 - (void)findAndSelectItemWithTouchPoint:(CGPoint)touchPoint
 {
+    if (self.isNeedSearchIcon) {
+        if (CGRectContainsPoint(self.searchIconView.frame,touchPoint)) {
+            //找到了选择的index
+            if (self.delegate&&[self.delegate respondsToSelector:@selector(mlLetterIndexNavigationView:didSelectIndex:)]) {
+                [self.delegate mlLetterIndexNavigationView:self didSelectIndex:0];
+            }
+            return;
+        }
+    }
+    
     for (MLLetterIndexNavigationItem *item in self.items) {
         if (CGRectContainsPoint(item.frame, touchPoint)) {
             [self unHighlightAllItem];
             item.isHighlighted = YES;//设置其高亮
             //找到了选择的index
             if (self.delegate&&[self.delegate respondsToSelector:@selector(mlLetterIndexNavigationView:didSelectIndex:)]) {
-                [self.delegate mlLetterIndexNavigationView:self didSelectIndex:item.index];
+                [self.delegate mlLetterIndexNavigationView:self didSelectIndex:self.isNeedSearchIcon?item.index+1:item.index];
             }
             return;
         }

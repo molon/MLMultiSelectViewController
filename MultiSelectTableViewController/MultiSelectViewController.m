@@ -131,6 +131,7 @@
 	if (!_tableView) {
 		_tableView = [[UITableView alloc]init];
         _tableView.showsVerticalScrollIndicator = NO;
+        _tableView.scrollsToTop = YES;
         _tableView.dataSource = self;
         _tableView.delegate = self;
 	}
@@ -141,6 +142,7 @@
 {
 	if (!_letterIndexView) {
 		_letterIndexView = [[MLLetterIndexNavigationView alloc]init];
+        _letterIndexView.isNeedSearchIcon = YES;
         _letterIndexView.delegate = self;
 	}
 	return _letterIndexView;
@@ -199,7 +201,11 @@
 #pragma mark - letter index delegate
 - (void)mlLetterIndexNavigationView:(MLLetterIndexNavigationView *)mlLetterIndexNavigationView didSelectIndex:(NSInteger)index
 {
-    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:index] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    if (index==0) {
+        [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+    }else{
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:index-1] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    }
 }
 
 #pragma mark - tableView dataSource
@@ -259,7 +265,7 @@
     if (item.selected||item.disabled) {
         cell.addedTipsLabel.hidden = NO;
     }
-
+    
     return cell;
 }
 
