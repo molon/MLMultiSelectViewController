@@ -25,6 +25,8 @@
 		36A8C6BE194473180052F6D1 /* UIProgressView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 36A8C6AB194473180052F6D1 /* UIProgressView+AFNetworking.m */; };
 		36A8C6BF194473180052F6D1 /* UIRefreshControl+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 36A8C6AD194473180052F6D1 /* UIRefreshControl+AFNetworking.m */; };
 		36A8C6C0194473180052F6D1 /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 36A8C6AF194473180052F6D1 /* UIWebView+AFNetworking.m */; };
+		36A8C6C41944895C0052F6D1 /* MultiSelectSearchResultTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 36A8C6C21944895C0052F6D1 /* MultiSelectSearchResultTableViewCell.m */; };
+		36A8C6C51944895C0052F6D1 /* MultiSelectSearchResultTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36A8C6C31944895C0052F6D1 /* MultiSelectSearchResultTableViewCell.xib */; };
 		36C417D819435ED400B53B59 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C417D719435ED400B53B59 /* Foundation.framework */; };
 		36C417DA19435ED400B53B59 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C417D919435ED400B53B59 /* CoreGraphics.framework */; };
 		36C417DC19435ED400B53B59 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C417DB19435ED400B53B59 /* UIKit.framework */; };
@@ -108,6 +110,9 @@
 		36A8C6AD194473180052F6D1 /* UIRefreshControl+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIRefreshControl+AFNetworking.m"; sourceTree = "<group>"; };
 		36A8C6AE194473180052F6D1 /* UIWebView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+AFNetworking.h"; sourceTree = "<group>"; };
 		36A8C6AF194473180052F6D1 /* UIWebView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+AFNetworking.m"; sourceTree = "<group>"; };
+		36A8C6C11944895C0052F6D1 /* MultiSelectSearchResultTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiSelectSearchResultTableViewCell.h; sourceTree = "<group>"; };
+		36A8C6C21944895C0052F6D1 /* MultiSelectSearchResultTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiSelectSearchResultTableViewCell.m; sourceTree = "<group>"; };
+		36A8C6C31944895C0052F6D1 /* MultiSelectSearchResultTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MultiSelectSearchResultTableViewCell.xib; sourceTree = "<group>"; };
 		36C417D419435ED400B53B59 /* MultiSelectTableViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiSelectTableViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36C417D719435ED400B53B59 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		36C417D919435ED400B53B59 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -220,6 +225,9 @@
 				36C41836194436DB00B53B59 /* MultiSelectedPanel.h */,
 				36C41837194436DB00B53B59 /* MultiSelectedPanel.m */,
 				36C41839194437AE00B53B59 /* MultiSelectedPanel.xib */,
+				36A8C6C11944895C0052F6D1 /* MultiSelectSearchResultTableViewCell.h */,
+				36A8C6C21944895C0052F6D1 /* MultiSelectSearchResultTableViewCell.m */,
+				36A8C6C31944895C0052F6D1 /* MultiSelectSearchResultTableViewCell.xib */,
 			);
 			name = MultiSelect;
 			sourceTree = "<group>";
@@ -484,6 +492,7 @@
 				36C417F019435ED400B53B59 /* Images.xcassets in Resources */,
 				36C4183019442F5800B53B59 /* Contacts_AddFriends_Icon_Search@2x.png in Resources */,
 				36C4182D19442F5800B53B59 /* CellGraySelected@2x.png in Resources */,
+				36A8C6C51944895C0052F6D1 /* MultiSelectSearchResultTableViewCell.xib in Resources */,
 				36A8C680194440240052F6D1 /* MultiSelectedPanelConfirmBtnbKG@2x.png in Resources */,
 				36C4182A19442F5800B53B59 /* AddGroupMemberBtnHL@2x.png in Resources */,
 				36C417E219435ED400B53B59 /* InfoPlist.strings in Resources */,
@@ -529,6 +538,7 @@
 				36A8C6B3194473180052F6D1 /* AFHTTPSessionManager.m in Sources */,
 				36C41838194436DB00B53B59 /* MultiSelectedPanel.m in Sources */,
 				36A8C6B8194473180052F6D1 /* AFURLResponseSerialization.m in Sources */,
+				36A8C6C41944895C0052F6D1 /* MultiSelectSearchResultTableViewCell.m in Sources */,
 				36A8C6B7194473180052F6D1 /* AFURLRequestSerialization.m in Sources */,
 				36A8C6B6194473180052F6D1 /* AFSecurityPolicy.m in Sources */,
 				36C4181719436F9B00B53B59 /* MultiSelectTableViewCell.m in Sources */,

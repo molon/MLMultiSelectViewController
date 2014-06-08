@@ -12,12 +12,13 @@
 #import "MultiSelectTableViewCell.h"
 #import "UIView+Convenience.h"
 #import "MultiSelectedPanel.h"
+#import "MultiSelectSearchResultTableViewCell.h"
 
 #define kDefaultSectionHeaderHeight 22.0f
 #define kDefaultRowHeight 55.0f
 #define IOS_VERSION ([[[UIDevice currentDevice] systemVersion]floatValue])
 
-@interface MultiSelectViewController ()<UITableViewDataSource,UITableViewDelegate,MLLetterIndexNavigationViewDelegate,MultiSelectedPanelDelegate>
+@interface MultiSelectViewController ()<UITableViewDataSource,UITableViewDelegate,MLLetterIndexNavigationViewDelegate,MultiSelectedPanelDelegate,UISearchBarDelegate,UISearchDisplayDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -27,9 +28,13 @@
 @property (nonatomic, strong) MLLetterIndexNavigationView *letterIndexView;
 @property (nonatomic, strong) MultiSelectedPanel *selectedPanel;
 
+@property (nonatomic, strong) UISearchBar *searchBar;
+@property (nonatomic, strong) UISearchDisplayController *searchController;
 
 @property (nonatomic, strong) NSMutableArray *selectedItems;
 @property (nonatomic, strong) NSMutableArray *selectedIndexes; //记录选择项对应的路径
+
+@property (nonatomic, strong) NSArray *searchResult;
 
 @end
 
@@ -107,7 +112,11 @@
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.letterIndexView];
     [self.view addSubview:self.selectedPanel];
-
+    
+    self.tableView.tableHeaderView = self.searchBar;
+    
+    self.searchController.delegate = self;
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -146,6 +155,28 @@
 	return _selectedPanel;
 }
 
+- (UISearchBar *)searchBar
+{
+	if (!_searchBar) {
+        UISearchBar * searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frameWidth, 44.0f)];
+        searchBar.placeholder = @"搜索";
+        searchBar.delegate = self;
+        [searchBar sizeToFit];
+        _searchBar = searchBar;
+	}
+	return _searchBar;
+}
+
+- (UISearchDisplayController *)searchController
+{
+	if (!_searchController) {
+		_searchController = [[UISearchDisplayController alloc]initWithSearchBar:self.searchBar contentsController:self];
+        _searchController.searchResultsDataSource = self;
+        _searchController.searchResultsDelegate = self;
+	}
+	return _searchController;
+}
+
 #pragma mark - layout
 - (void)viewDidLayoutSubviews
 {
@@ -174,33 +205,61 @@
 #pragma mark - tableView dataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return self.keys.count;
+    if ([tableView isEqual:self.tableView]) {
+        return self.keys.count;
+    }
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [((NSArray*)self.dict[self.keys[section]]) count];
+    if ([tableView isEqual:self.tableView]) {
+        return [((NSArray*)self.dict[self.keys[section]]) count];
+    }
+    
+    return self.searchResult.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"MultiSelectTableViewCell";
-    MultiSelectTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if ([tableView isEqual:self.tableView]) {
+        static NSString *CellIdentifier = @"MultiSelectTableViewCell";
+        MultiSelectTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (!cell) {
+            cell = [MultiSelectTableViewCell instanceFromNib];
+            cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        }
+        
+        MultiSelectItem *item = ((NSArray*)self.dict[self.keys[indexPath.section]])[indexPath.row];
+        
+        [cell.cellImageView setImageWithURL:item.imageURL];
+        cell.label.text = item.name;
+        if (item.disabled) {
+            cell.selectState = MultiSelectTableViewSelectStateDisabled;
+        }else{
+            cell.selectState = item.selected?MultiSelectTableViewSelectStateSelected:MultiSelectTableViewSelectStateNoSelected;
+        }
+        
+        return cell;
+    }
+    
+    static NSString *CellIdentifier = @"MultiSelectSearchResultTableViewCell";
+    MultiSelectSearchResultTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (!cell) {
-        cell = [MultiSelectTableViewCell instanceFromNib];
+        cell = [MultiSelectSearchResultTableViewCell instanceFromNib];
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
     }
     
-    MultiSelectItem *item = ((NSArray*)self.dict[self.keys[indexPath.section]])[indexPath.row];
-    
+    MultiSelectItem *item = self.searchResult[indexPath.row];
     [cell.cellImageView setImageWithURL:item.imageURL];
-    cell.label.text = item.name;
+    cell.contentLabel.text = item.name;
     if (item.disabled) {
-        cell.selectState = MultiSelectTableViewSelectStateDisabled;
-    }else{
-        cell.selectState = item.selected?MultiSelectTableViewSelectStateSelected:MultiSelectTableViewSelectStateNoSelected;
+        cell.contentLabel.textColor = [UIColor grayColor];
     }
-    
+    if (item.selected||item.disabled) {
+        cell.addedTipsLabel.hidden = NO;
+    }
+
     return cell;
 }
 
@@ -208,15 +267,26 @@
 //section 头部,为了IOS6的美化
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *customHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frameWidth, kDefaultSectionHeaderHeight)];
-    customHeaderView.backgroundColor = [UIColor colorWithRed:0.926 green:0.920 blue:0.956 alpha:1.000];
-    UILabel *headerLabel = [[UILabel alloc]initWithFrame:CGRectMake(15.0f, 0, customHeaderView.frameWidth-15.0f, kDefaultSectionHeaderHeight)];
-    headerLabel.text = self.keys[section];
-    headerLabel.backgroundColor = [UIColor clearColor];
-    headerLabel.font = [UIFont boldSystemFontOfSize:14.0f];
-    headerLabel.textColor = [UIColor darkGrayColor];
-    [customHeaderView addSubview:headerLabel];
-    return customHeaderView;
+    if ([tableView isEqual:self.tableView]) {
+        UIView *customHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frameWidth, kDefaultSectionHeaderHeight)];
+        customHeaderView.backgroundColor = [UIColor colorWithRed:0.926 green:0.920 blue:0.956 alpha:1.000];
+        UILabel *headerLabel = [[UILabel alloc]initWithFrame:CGRectMake(15.0f, 0, customHeaderView.frameWidth-15.0f, kDefaultSectionHeaderHeight)];
+        headerLabel.text = self.keys[section];
+        headerLabel.backgroundColor = [UIColor clearColor];
+        headerLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+        headerLabel.textColor = [UIColor darkGrayColor];
+        [customHeaderView addSubview:headerLabel];
+        return customHeaderView;
+    }
+    return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if ([tableView isEqual:self.tableView]) {
+        return kDefaultSectionHeaderHeight;
+    }
+    return 0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -227,28 +297,56 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    MultiSelectItem *item = ((NSArray*)self.dict[self.keys[indexPath.section]])[indexPath.row];
-    if (item.disabled) {
+    if ([tableView isEqual:self.tableView]) {
+        MultiSelectItem *item = ((NSArray*)self.dict[self.keys[indexPath.section]])[indexPath.row];
+        if (item.disabled) {
+            return;
+        }
+        item.selected = !item.selected;
+        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+        if (item.selected) {
+            //告诉panel应该添加
+            [self.selectedItems addObject:item];
+            [self.selectedIndexes addObject:indexPath];
+            
+            [self.selectedPanel didAddSelectedIndex:self.selectedItems.count-1];
+        }else{
+            //告诉panel应该删除
+            NSUInteger index = [self.selectedItems indexOfObject:item];
+            
+            [self.selectedItems removeObject:item];
+            [self.selectedIndexes removeObject:indexPath];
+            
+            if (index!=NSNotFound) {
+                [self.selectedPanel didDeleteSelectedIndex:index];
+            }
+        }
+        
         return;
     }
-    item.selected = !item.selected;
-    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     
-    if (item.selected) {
-        //告诉panel应该添加
-        [self.selectedItems addObject:item];
-        [self.selectedIndexes addObject:indexPath];
-        
-        [self.selectedPanel didAddSelectedIndex:self.selectedItems.count-1];
-    }else{
-        //告诉panel应该删除
-        NSUInteger index = [self.selectedItems indexOfObject:item];
-        
-        [self.selectedItems removeObject:item];
-        [self.selectedIndexes removeObject:indexPath];
-        
-        if (index!=NSNotFound) {
-            [self.selectedPanel didDeleteSelectedIndex:index];
+    //找到点击的item是在哪个
+    MultiSelectItem *item = self.searchResult[indexPath.row];
+    //找到位置
+    for (NSUInteger section=0; section<self.keys.count; section++) {
+        for (NSUInteger row=0; row<((NSArray*)self.dict[self.keys[section]]).count; row++) {
+            MultiSelectItem *aItem = self.dict[self.keys[section]][row];
+            if ([item isEqual:aItem]){
+                [self.searchController setActive:NO animated:YES];
+                
+                NSIndexPath *path = [NSIndexPath indexPathForRow:row inSection:section];
+                
+                //点击这个位置
+                if (!item.selected&&!item.disabled) {
+                    [self tableView:self.tableView didSelectRowAtIndexPath:path];
+                }
+                
+                //滚动到这个位置
+                [self.tableView scrollToRowAtIndexPath:path atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+                
+                break;
+            }
         }
     }
 }
@@ -299,4 +397,17 @@
 {
     NSLog(@"确认");
 }
+
+#pragma mark - searchbar delegate
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    //找到名字里有searchText关键字的
+    searchText = [searchText stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    NSPredicate *pre = [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@",searchText];
+    self.searchResult = [self.items filteredArrayUsingPredicate:pre];
+    
+    [self.searchController.searchResultsTableView reloadData];
+}
+
 @end
