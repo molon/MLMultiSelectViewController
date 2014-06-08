@@ -61,7 +61,7 @@
     if (self.isHighlighted) {
         self.textColor = [UIColor redColor];
     }else{
-        self.textColor = [UIColor blackColor];
+        self.textColor = [UIColor darkGrayColor];
     }
 }
 

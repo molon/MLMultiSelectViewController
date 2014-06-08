@@ -10,6 +10,11 @@
 #import "MLLetterIndexNavigationView.h"
 #import "MultiSelectItem.h"
 #import "MultiSelectTableViewCell.h"
+#import "UIView+Convenience.h"
+#import "MultiSelectedPanel.h"
+
+#define kDefaultSectionHeaderHeight 22.0f
+#define kDefaultRowHeight 55.0f
 
 @interface MultiSelectViewController ()<UITableViewDataSource,UITableViewDelegate,MLLetterIndexNavigationViewDelegate>
 
@@ -19,7 +24,7 @@
 @property (nonatomic, strong) NSMutableDictionary *dict;
 
 @property (nonatomic, strong) MLLetterIndexNavigationView *letterIndexView;
-
+@property (nonatomic, strong) MultiSelectedPanel *selectedPanel;
 @end
 
 @implementation MultiSelectViewController
@@ -73,18 +78,7 @@
     
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.letterIndexView];
-    [self.tableView setEditing:YES];
-
-    //设置默认选择的
-    for (NSUInteger section=0; section<self.keys.count; section++) {
-        for (NSUInteger row=0; row<((NSArray*)self.dict[self.keys[section]]).count; row++) {
-            MultiSelectItem *item = ((NSArray*)self.dict[self.keys[section]])[row];
-            if (item.selected) {
-                [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section] animated:NO scrollPosition:UITableViewScrollPositionNone];
-            }
-        }
-    }
-
+    [self.view addSubview:self.selectedPanel];
 }
 
 - (void)didReceiveMemoryWarning
@@ -114,13 +108,24 @@
 	return _letterIndexView;
 }
 
+- (MultiSelectedPanel *)selectedPanel
+{
+	if (!_selectedPanel) {
+		_selectedPanel = [MultiSelectedPanel instanceFromNib];
+	}
+	return _selectedPanel;
+}
+
 #pragma mark - layout
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    self.tableView.frame = self.view.bounds;
+#define kSelectPanelHeight 44.0f
+    self.tableView.frame = CGRectMake(0, 0, self.view.frameWidth, self.view.frameHeight-kSelectPanelHeight);
     //导航View的位置
-    self.letterIndexView.frame = CGRectMake(self.tableView.frame.origin.x+self.tableView.frame.size.width-20, self.tableView.frame.origin.y, 20, self.tableView.frame.size.height);
+    self.letterIndexView.frame = CGRectMake(self.tableView.frameRight-20.0f, self.tableView.frameY, 20.0f, self.tableView.frameHeight);
+    
+    self.selectedPanel.frame = CGRectMake(0, self.tableView.frameBottom, self.view.frameWidth, kSelectPanelHeight);
 }
 
 #pragma mark - letter index delegate
@@ -133,11 +138,6 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return self.keys.count;
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    return self.keys[section];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -158,49 +158,45 @@
     
     cell.cellImageView.image = [UIImage imageNamed:item.imageName];
     cell.label.text = item.name;
+    if (item.disabled) {
+        cell.selectState = MultiSelectTableViewSelectStateDisabled;
+    }else{
+        cell.selectState = item.selected?MultiSelectTableViewSelectStateSelected:MultiSelectTableViewSelectStateNoSelected;
+    }
     
     return cell;
 }
 
 #pragma mark - tableView delegate
+//section 头部,为了IOS6的美化
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *customHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frameWidth, kDefaultSectionHeaderHeight)];
+    customHeaderView.backgroundColor = [UIColor colorWithRed:0.926 green:0.920 blue:0.956 alpha:1.000];
+    UILabel *headerLabel = [[UILabel alloc]initWithFrame:CGRectMake(15.0f, 0, customHeaderView.frameWidth-15.0f, kDefaultSectionHeaderHeight)];
+    headerLabel.text = self.keys[section];
+    headerLabel.backgroundColor = [UIColor clearColor];
+    headerLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+    headerLabel.textColor = [UIColor darkGrayColor];
+    [customHeaderView addSubview:headerLabel];
+    return customHeaderView;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 55.0f;
+    return kDefaultRowHeight;
 }
 
--  (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    MultiSelectItem *item = ((NSArray*)self.dict[self.keys[indexPath.section]])[indexPath.row];
-    
-    if (!item.disabled) {
-        return UITableViewCellEditingStyleDelete|UITableViewCellEditingStyleInsert;
-    }
-    
-    return UITableViewCellEditingStyleNone;
-}
-
-//有这个才能激活编辑状态
--(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-}
-
-//添加一项
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSLog(@"添加%ld",indexPath.row);
-    if (indexPath.row==0) {
-        
-//        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:20 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
-        
-        
-        //        for (NSUInteger i=0; i<50; i++) {
-        //            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
-        //        }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    MultiSelectItem *item = ((NSArray*)self.dict[self.keys[indexPath.section]])[indexPath.row];
+    if (item.disabled) {
+        return;
     }
-}
+    item.selected = !item.selected;
+    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 
-//取消一项
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSLog(@"取消%ld",indexPath.row);
 }
 
 #pragma mark - common

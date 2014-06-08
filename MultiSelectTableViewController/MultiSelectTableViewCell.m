@@ -8,6 +8,12 @@
 
 #import "MultiSelectTableViewCell.h"
 
+@interface MultiSelectTableViewCell()
+
+@property (weak, nonatomic) IBOutlet UIImageView *selectImageView;
+
+@end
+
 @implementation MultiSelectTableViewCell
 
 + (instancetype)instanceFromNib
@@ -36,8 +42,28 @@
 
 - (void)reset
 {
+    self.selectState = MultiSelectTableViewSelectStateNoSelected;
     self.cellImageView.image = nil;
     self.label.text = @" ";
+}
+
+- (void)setSelectState:(MultiSelectTableViewSelectState)selectState
+{
+    _selectState = selectState;
+    
+    switch (selectState) {
+        case MultiSelectTableViewSelectStateNoSelected:
+            self.selectImageView.image = [UIImage imageNamed:@"CellNotSelected"];
+            break;
+        case MultiSelectTableViewSelectStateSelected:
+            self.selectImageView.image = [UIImage imageNamed:@"CellBlueSelected"];
+            break;
+        case MultiSelectTableViewSelectStateDisabled:
+            self.selectImageView.image = [UIImage imageNamed:@"CellGraySelected"];
+            break;
+        default:
+            break;
+    }
 }
 
 @end

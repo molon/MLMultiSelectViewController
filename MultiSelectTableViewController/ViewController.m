@@ -32,6 +32,7 @@
     
     //建立100个测试数据
     NSMutableArray *items = [NSMutableArray array];
+    //网上拉的昵称列表，请忽视非主流。
     NSArray *names = @[@"貓眼无敌",
                       @"涽暗丶芉咮帘",
                       @"一个人搁浅",
@@ -74,7 +75,9 @@
     }
     MultiSelectViewController *vc = [[MultiSelectViewController alloc]init];
     vc.items = items;
-    [self.navigationController pushViewController:vc animated:YES];
+    
+    UINavigationController *navVC = [[UINavigationController alloc]initWithRootViewController:vc];
+    [self.navigationController presentViewController:navVC animated:YES completion:nil];
 }
 
 @end

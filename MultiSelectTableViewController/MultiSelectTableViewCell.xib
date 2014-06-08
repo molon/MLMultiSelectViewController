@@ -14,7 +14,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="avatar.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="w4h-5S-1VC">
-                        <rect key="frame" x="10" y="9" width="36" height="36"/>
+                        <rect key="frame" x="50" y="9" width="36" height="36"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="36" id="imZ-mI-pQ6"/>
@@ -22,29 +22,41 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="龚经理" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XAY-n1-xxk">
-                        <rect key="frame" x="54" y="18" width="246" height="18"/>
+                        <rect key="frame" x="94" y="18" width="206" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CellNotSelected.png" translatesAutoresizingMaskIntoConstraints="NO" id="n4U-WM-GYG">
+                        <rect key="frame" x="7" y="12" width="30" height="30"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="30" id="BDX-2G-buT"/>
+                            <constraint firstAttribute="width" constant="30" id="YfY-ad-ybN"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="deviceRGB"/>
                 <constraints>
-                    <constraint firstItem="w4h-5S-1VC" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="6ZT-Or-rCV"/>
+                    <constraint firstAttribute="centerY" secondItem="n4U-WM-GYG" secondAttribute="centerY" id="JVJ-Fo-fvu"/>
                     <constraint firstItem="XAY-n1-xxk" firstAttribute="leading" secondItem="w4h-5S-1VC" secondAttribute="trailing" constant="8" id="TIS-XS-iLz"/>
+                    <constraint firstItem="n4U-WM-GYG" firstAttribute="centerY" secondItem="w4h-5S-1VC" secondAttribute="centerY" id="VBH-Zl-jpc"/>
                     <constraint firstAttribute="trailing" secondItem="XAY-n1-xxk" secondAttribute="trailing" constant="20" id="bcq-kq-9X3"/>
+                    <constraint firstItem="w4h-5S-1VC" firstAttribute="leading" secondItem="n4U-WM-GYG" secondAttribute="trailing" constant="13" id="bpS-8A-6eT"/>
                     <constraint firstItem="w4h-5S-1VC" firstAttribute="centerY" secondItem="XAY-n1-xxk" secondAttribute="centerY" id="cak-ok-uJO"/>
-                    <constraint firstAttribute="centerY" secondItem="w4h-5S-1VC" secondAttribute="centerY" id="gkP-oH-rV9"/>
+                    <constraint firstItem="n4U-WM-GYG" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="7" id="isk-nJ-fvE"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
                 <outlet property="cellImageView" destination="w4h-5S-1VC" id="Zle-sw-CGl"/>
                 <outlet property="label" destination="XAY-n1-xxk" id="qQk-Ax-PV4"/>
+                <outlet property="selectImageView" destination="n4U-WM-GYG" id="XtE-IN-xjC"/>
             </connections>
         </tableViewCell>
     </objects>
     <resources>
+        <image name="CellNotSelected.png" width="30" height="30"/>
         <image name="avatar.jpg" width="180" height="180"/>
     </resources>
 </document>

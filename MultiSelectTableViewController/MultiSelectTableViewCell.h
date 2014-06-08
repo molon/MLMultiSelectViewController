@@ -8,11 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_OPTIONS(NSUInteger, MultiSelectTableViewSelectState) {
+    MultiSelectTableViewSelectStateNoSelected = 0,
+    MultiSelectTableViewSelectStateSelected,
+    MultiSelectTableViewSelectStateDisabled,
+};
+
 @interface MultiSelectTableViewCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *cellImageView;
 
 @property (weak, nonatomic) IBOutlet UILabel *label;
+
+@property (nonatomic, assign) MultiSelectTableViewSelectState selectState;
 
 + (instancetype)instanceFromNib;
 
