@@ -14,10 +14,6 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a1W-uJ-Tle">
-                    <rect key="frame" x="0.0" y="0.0" width="242" height="44"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                </scrollView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DDT-ci-h3H">
                     <rect key="frame" x="252" y="8" width="63" height="28"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -33,26 +29,38 @@
                     <state key="highlighted">
                         <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <connections>
+                        <action selector="confirmBtnPressed:" destination="iN0-l3-epB" eventType="touchUpInside" id="9mN-Rz-d4C"/>
+                    </connections>
                 </button>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="87r-EQ-cZu">
+                    <rect key="frame" x="0.0" y="5" width="242" height="36"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="iN0-l3-epB" id="niJ-FK-SPG"/>
+                        <outlet property="delegate" destination="iN0-l3-epB" id="o06-OV-ob5"/>
+                    </connections>
+                </tableView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="DDT-ci-h3H" firstAttribute="leading" secondItem="87r-EQ-cZu" secondAttribute="trailing" constant="10" id="2ES-iM-D6S"/>
                 <constraint firstAttribute="trailing" secondItem="DDT-ci-h3H" secondAttribute="trailing" constant="5" id="4Ih-RX-NKl"/>
-                <constraint firstItem="a1W-uJ-Tle" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Am2-My-tjh"/>
                 <constraint firstAttribute="bottom" secondItem="Ld1-oS-IXB" secondAttribute="bottom" id="Kq0-k5-y9s"/>
                 <constraint firstItem="Ld1-oS-IXB" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="O1C-cj-d4c"/>
-                <constraint firstItem="DDT-ci-h3H" firstAttribute="leading" secondItem="a1W-uJ-Tle" secondAttribute="trailing" constant="10" id="cZq-3l-uRc"/>
+                <constraint firstItem="87r-EQ-cZu" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="cPc-p9-5MX"/>
                 <constraint firstItem="Ld1-oS-IXB" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="cgi-4p-9YE"/>
                 <constraint firstAttribute="centerY" secondItem="DDT-ci-h3H" secondAttribute="centerY" id="iFz-kd-nob"/>
-                <constraint firstAttribute="bottom" secondItem="a1W-uJ-Tle" secondAttribute="bottom" id="mja-tY-Jdo"/>
+                <constraint firstAttribute="bottom" secondItem="87r-EQ-cZu" secondAttribute="bottom" constant="3" id="lg0-yI-YU0"/>
                 <constraint firstAttribute="trailing" secondItem="Ld1-oS-IXB" secondAttribute="trailing" id="rEU-hw-Nbu"/>
-                <constraint firstItem="a1W-uJ-Tle" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="yiB-fn-2zC"/>
+                <constraint firstItem="87r-EQ-cZu" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="5" id="zsX-ur-d6y"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="bkgImageView" destination="Ld1-oS-IXB" id="MJv-cW-I0P"/>
                 <outlet property="confirmBtn" destination="DDT-ci-h3H" id="gFB-bH-MdA"/>
-                <outlet property="scrollView" destination="a1W-uJ-Tle" id="no4-1z-XBf"/>
+                <outlet property="tableView" destination="87r-EQ-cZu" id="o1i-o7-6gq"/>
             </connections>
         </view>
     </objects>

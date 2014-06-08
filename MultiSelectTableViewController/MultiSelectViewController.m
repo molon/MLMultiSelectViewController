@@ -15,8 +15,9 @@
 
 #define kDefaultSectionHeaderHeight 22.0f
 #define kDefaultRowHeight 55.0f
+#define IOS_VERSION ([[[UIDevice currentDevice] systemVersion]floatValue])
 
-@interface MultiSelectViewController ()<UITableViewDataSource,UITableViewDelegate,MLLetterIndexNavigationViewDelegate>
+@interface MultiSelectViewController ()<UITableViewDataSource,UITableViewDelegate,MLLetterIndexNavigationViewDelegate,MultiSelectedPanelDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -25,6 +26,11 @@
 
 @property (nonatomic, strong) MLLetterIndexNavigationView *letterIndexView;
 @property (nonatomic, strong) MultiSelectedPanel *selectedPanel;
+
+
+@property (nonatomic, strong) NSMutableArray *selectedItems;
+@property (nonatomic, strong) NSMutableArray *selectedIndexes; //记录选择项对应的路径
+
 @end
 
 @implementation MultiSelectViewController
@@ -38,6 +44,11 @@
     return self;
 }
 
+- (void)dismiss
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -45,6 +56,8 @@
     self.title = @"选择联盟商家";
     self.view.backgroundColor = [UIColor colorWithWhite:1.000 alpha:1.000];
     self.tableView.backgroundColor = [UIColor colorWithWhite:1.000 alpha:1.000];
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
     
     //处理传递进来的数组成字典
     self.dict = [NSMutableDictionary dictionary];
@@ -73,12 +86,28 @@
     
     //整理完毕，将key的排序结果记录
     self.keys = letters;
-    
     self.letterIndexView.keys = self.keys;
+    
+    //找到已经选择的项目
+    NSMutableArray *selectedItems = [NSMutableArray array];
+    NSMutableArray *selectedIndexes = [NSMutableArray array];
+    for (NSUInteger section=0; section<self.keys.count; section++) {
+        for (NSUInteger row=0; row<((NSArray*)self.dict[self.keys[section]]).count; row++) {
+            MultiSelectItem *item = self.dict[self.keys[section]][row];
+            if (!item.disabled&&item.selected) {
+                [selectedItems addObject:item];
+                [selectedIndexes addObject:[NSIndexPath indexPathForRow:row inSection:section]];
+            }
+        }
+    }
+    self.selectedItems = selectedItems;
+    self.selectedIndexes = selectedIndexes;
+    self.selectedPanel.selectedItems = self.selectedItems;
     
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.letterIndexView];
     [self.view addSubview:self.selectedPanel];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -112,6 +141,7 @@
 {
 	if (!_selectedPanel) {
 		_selectedPanel = [MultiSelectedPanel instanceFromNib];
+        _selectedPanel.delegate = self;
 	}
 	return _selectedPanel;
 }
@@ -122,10 +152,17 @@
     [super viewDidLayoutSubviews];
 #define kSelectPanelHeight 44.0f
     self.tableView.frame = CGRectMake(0, 0, self.view.frameWidth, self.view.frameHeight-kSelectPanelHeight);
+    
+    CGFloat topY = 0.0f;
     //导航View的位置
-    self.letterIndexView.frame = CGRectMake(self.tableView.frameRight-20.0f, self.tableView.frameY, 20.0f, self.tableView.frameHeight);
+    if (IOS_VERSION>=7.0) { //简单处理下适配吧
+        topY += 20.0f;
+        topY += (self.view.frameHeight>self.view.frameWidth)?44.0f:32.0f;
+    }
+    self.letterIndexView.frame = CGRectMake(self.tableView.frameRight-20.0f, topY, 20.0f, self.view.frameHeight-kSelectPanelHeight-topY);
     
     self.selectedPanel.frame = CGRectMake(0, self.tableView.frameBottom, self.view.frameWidth, kSelectPanelHeight);
+    
 }
 
 #pragma mark - letter index delegate
@@ -156,7 +193,7 @@
     
     MultiSelectItem *item = ((NSArray*)self.dict[self.keys[indexPath.section]])[indexPath.row];
     
-    cell.cellImageView.image = [UIImage imageNamed:item.imageName];
+    [cell.cellImageView setImageWithURL:item.imageURL];
     cell.label.text = item.name;
     if (item.disabled) {
         cell.selectState = MultiSelectTableViewSelectStateDisabled;
@@ -195,8 +232,25 @@
         return;
     }
     item.selected = !item.selected;
-    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-
+    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    
+    if (item.selected) {
+        //告诉panel应该添加
+        [self.selectedItems addObject:item];
+        [self.selectedIndexes addObject:indexPath];
+        
+        [self.selectedPanel didAddSelectedIndex:self.selectedItems.count-1];
+    }else{
+        //告诉panel应该删除
+        NSUInteger index = [self.selectedItems indexOfObject:item];
+        
+        [self.selectedItems removeObject:item];
+        [self.selectedIndexes removeObject:indexPath];
+        
+        if (index!=NSNotFound) {
+            [self.selectedPanel didDeleteSelectedIndex:index];
+        }
+    }
 }
 
 #pragma mark - common
@@ -213,7 +267,36 @@
     NSString *firstLetter = [[finalString substringToIndex:1]uppercaseString];
     if (!firstLetter||firstLetter.length<=0) {
         firstLetter = @"#";
+    }else{
+        unichar letter = [firstLetter characterAtIndex:0];
+        if (letter<65||letter>90) {
+            firstLetter = @"#";
+        }
     }
     return firstLetter;
+}
+
+#pragma mark - selelcted panel delegate
+- (void)willDeleteRowWithItem:(MultiSelectItem*)item withMultiSelectedPanel:(MultiSelectedPanel*)multiSelectedPanel
+{
+    //在此做对数组元素的删除工作
+    NSUInteger index = [self.selectedItems indexOfObject:item];
+    if (index==NSNotFound) {
+        return;
+    }
+    
+    item.selected = NO;
+    
+    NSIndexPath *indexPath = self.selectedIndexes[index];
+    
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    
+    [self.selectedItems removeObjectAtIndex:index];
+    [self.selectedIndexes removeObjectAtIndex:index];
+}
+
+- (void)didConfirmWithMultiSelectedPanel:(MultiSelectedPanel*)multiSelectedPanel
+{
+    NSLog(@"确认");
 }
 @end
