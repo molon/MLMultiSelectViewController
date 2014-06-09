@@ -8,6 +8,9 @@
 
 #import "MultiSelectTableViewCell.h"
 
+#define kBundleName @"MLMultiSelectViewController.bundle"
+#define kSrcName(file) [kBundleName stringByAppendingPathComponent:file]
+
 @interface MultiSelectTableViewCell()
 
 @property (weak, nonatomic) IBOutlet UIImageView *selectImageView;
@@ -53,13 +56,13 @@
     
     switch (selectState) {
         case MultiSelectTableViewSelectStateNoSelected:
-            self.selectImageView.image = [UIImage imageNamed:@"CellNotSelected"];
+            self.selectImageView.image = [UIImage imageNamed:kSrcName(@"CellNotSelected")];
             break;
         case MultiSelectTableViewSelectStateSelected:
-            self.selectImageView.image = [UIImage imageNamed:@"CellBlueSelected"];
+            self.selectImageView.image = [UIImage imageNamed:kSrcName(@"CellBlueSelected")];
             break;
         case MultiSelectTableViewSelectStateDisabled:
-            self.selectImageView.image = [UIImage imageNamed:@"CellGraySelected"];
+            self.selectImageView.image = [UIImage imageNamed:kSrcName(@"CellGraySelected")];
             break;
         default:
             break;

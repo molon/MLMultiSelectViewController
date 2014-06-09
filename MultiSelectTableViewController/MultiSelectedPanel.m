@@ -9,6 +9,9 @@
 #import "MultiSelectedPanel.h"
 #import "MultiSelectItem.h"
 
+#define kBundleName @"MLMultiSelectViewController.bundle"
+#define kSrcName(file) [kBundleName stringByAppendingPathComponent:file]
+
 @interface MultiSelectedPanel()<UITableViewDataSource,UITabBarControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *bkgImageView;
@@ -45,7 +48,7 @@
 {
     self.autoresizingMask = UIViewAutoresizingNone;
     
-    self.bkgImageView.image = [[UIImage imageNamed:@"MultiSelectedPanelBkg"]resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
+    self.bkgImageView.image = [[UIImage imageNamed:kSrcName(@"MultiSelectedPanelBkg")]resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
     
     self.tableView.scrollsToTop = NO;
     self.tableView.showsVerticalScrollIndicator = NO;
@@ -53,7 +56,7 @@
     
     [self.confirmBtn setTitle:@"确认(0)" forState:UIControlStateNormal];
     self.confirmBtn.enabled = NO;
-    [self.confirmBtn setBackgroundImage:[[UIImage imageNamed:@"MultiSelectedPanelConfirmBtnbKG"] resizableImageWithCapInsets:UIEdgeInsetsMake(8, 8, 8, 8)] forState:UIControlStateNormal];
+    [self.confirmBtn setBackgroundImage:[[UIImage imageNamed:kSrcName(@"MultiSelectedPanelConfirmBtnbKG")] resizableImageWithCapInsets:UIEdgeInsetsMake(8, 8, 8, 8)] forState:UIControlStateNormal];
 }
 
 - (void)updateConfirmButton

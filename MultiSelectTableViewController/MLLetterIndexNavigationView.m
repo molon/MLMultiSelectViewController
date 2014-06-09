@@ -10,6 +10,9 @@
 #import "MLLetterIndexNavigationItem.h"
 
 #define kImageViewTag 888
+
+#define kBundleName @"MLLetterIndexNavigationView.bundle"
+#define kSrcName(file) [kBundleName stringByAppendingPathComponent:file]
 @interface MLLetterIndexNavigationView()
 
 @property(nonatomic,strong) UIView *contentView;
@@ -50,7 +53,7 @@
 {
     if (!_searchIconView) {
 		UIImageView *imageView = [[UIImageView alloc]init];
-        imageView.image = [UIImage imageNamed:@"SearchIcon"];
+        imageView.image = [UIImage imageNamed:kSrcName(@"SearchIcon")];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.clipsToBounds = YES;
         imageView.backgroundColor = [UIColor clearColor];
